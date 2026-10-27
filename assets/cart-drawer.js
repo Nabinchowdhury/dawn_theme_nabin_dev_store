@@ -2,6 +2,7 @@ class CartDrawer extends HTMLElement {
   constructor() {
     super();
 
+    // this.applyDiscount();
     this.addEventListener('keyup', (evt) => evt.code === 'Escape' && this.close());
     this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
     this.setHeaderCartIconAccessibility();
@@ -118,7 +119,35 @@ class CartDrawer extends HTMLElement {
   setActiveElement(element) {
     this.activeElement = element;
   }
-}
+  applyDiscount(event){
+    event.preventDefault();
+    const form = event.target;
+    console.log('************************** applying code ***********************', form);
+    const discountCode = form.querySelector('input[name="discount"]');
+    console.log(discountCode);
+    
+
+    const discountCodeValue = discountCode.value;
+    console.log(discountCodeValue);
+    const updates = {
+      discount: discountCodeValue, 
+      sections: ['cart-drawer']
+    }
+    fetch(window.Shopify.routes.root + 'cart/update.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updates)
+    })
+    .then(response => {
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+}  
 
 customElements.define('cart-drawer', CartDrawer);
 
