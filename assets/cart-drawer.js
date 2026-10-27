@@ -143,6 +143,9 @@ class CartDrawer extends HTMLElement {
     .then(response => {
       return response.json();
     })
+    .then(response => {
+      return this.renderContents(response)
+    })
     .catch((error) => {
       console.error('Error:', error);
     });
